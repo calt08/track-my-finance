@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
     await user.save();
     res.status(201).json(user);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({status: 400, message: err.message});
   }
 };
 
