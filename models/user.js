@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     validate(value) {
-      if (validator.isEmail(value)) {
+      if (!validator.isEmail(value)) {
         throw new Error("invalid email address");
       }
     },
@@ -25,25 +25,25 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    trim: 7,
+    minlength: 7,
   },
 });
 
 userSchema.statics.findByCredentials = async (email, password) => {
-	const user = await User.findOne({ email});
+  const user = await User.findOne({ email });
 
-	if (!user) {
-		throw new Error("unable to login");
-	}
+  if (!user) {
+    throw new Error("unable to login");
+  }
 
-	const isValidPassword = await bcrypt.compare(password, user.password);
+  const isValidPassword = await bcrypt.compare(password, user.password);
 
-	if (!isValidPassword) {
-		throw new Error("unable to login");
-	}
+  if (!isValidPassword) {
+    throw new Error("unable to login");
+  }
 
-	return user;
-}
+  return user;
+};
 
 userSchema.pre("save", async function (next) {
   const user = this;
@@ -55,6 +55,6 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-const User = mongoose.Model("user", userSchema);
+const User = mongoose.model("user", userSchema);
 
 module.exports = User;
