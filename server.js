@@ -1,10 +1,10 @@
 const express = require("express");
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Import Middlewares
-const router = require("./routes/router");
+const userRouter = require("./routes/user");
 const logger = require("./middlewares/logger");
 
 // Setup database connection
@@ -15,8 +15,8 @@ app.use(express.json());
 app.use(logger);
 
 // Routes
-app.use("", router);
+app.use(userRouter);
 
 app.listen(PORT, () => {
-    console.log(`Listening on Port ${PORT}`);
+  console.log(`Listening on Port ${PORT}`);
 });
