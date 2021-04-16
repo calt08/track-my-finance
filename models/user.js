@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator").default;
 const bcrypt = require("bcryptjs");
+const transactionSchema = require("./transaction");
+const accountSchema = require("./account");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -50,6 +52,20 @@ userSchema.pre("save", async function (next) {
 
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
+  }
+
+  next();
+});
+
+userSchema.pre("findByIdAndDelete", async function (next) {
+  const query = this;
+  const _id = query._conditions._id;
+
+  try {
+    await transactionSchema.findByIdAndDelete(_id);
+    await accountSchema.findByIdAndDelete(_id);
+  } catch (err) {
+    throw new Error("failed deleting user");
   }
 
   next();
