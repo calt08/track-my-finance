@@ -11,6 +11,22 @@ const createUser = async (req, res) => {
   }
 };
 
+const fetchUserByID = async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const user = await User.findById(_id);
+
+    if (!user) {
+      return res.status(400).send({ status: 400, message: "user not found" });
+    }
+
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
 const deleteUser = async (req, res) => {
   const _id = req.params.id;
 
@@ -30,4 +46,5 @@ const deleteUser = async (req, res) => {
 module.exports = {
   createUser,
   deleteUser,
+  fetchUserByID,
 };
