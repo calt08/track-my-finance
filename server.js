@@ -5,6 +5,7 @@ const app = express();
 
 // Import Middlewares
 const userRouter = require("./routes/user");
+const generalRouter = require("./routes/router");
 const logger = require("./middlewares/logger");
 
 // Setup database connection
@@ -16,6 +17,7 @@ app.use(logger);
 
 // Routes
 app.use(userRouter);
+app.use(generalRouter);
 
 app.listen(PORT, () => {
   console.log(`Listening on Port ${PORT}`);
