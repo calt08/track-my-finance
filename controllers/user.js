@@ -12,10 +12,10 @@ const createUser = async (req, res) => {
 };
 
 const fetchUserByID = async (req, res) => {
-  const _id = req.params.id;
+  const id = req.params.id;
 
   try {
-    const user = await User.findById(_id);
+    const user = await User.findById(id);
 
     if (!user) {
       return res.status(400).send({ status: 400, message: "user not found" });
@@ -28,10 +28,10 @@ const fetchUserByID = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const _id = req.params.id;
+  const id = req.params.id;
 
   try {
-    const user = await User.findByIdAndDelete(_id);
+    const user = await User.findByIdAndDelete(id);
 
     if (!user) {
       return res.status(400).send({ status: 400, message: "user not found" });
