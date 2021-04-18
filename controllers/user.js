@@ -5,6 +5,13 @@ const { genSalt, hash, compare } = require("bcryptjs");
 const createUser = async (req, res) => {
   const user = new User(req.body);
 
+  //Checking the DB to see if the email is taken
+  const emailTaken = await UserModel.findOne({ email: req.body.email });
+  if (emailTaken)
+    return res
+      .status(400)
+      .send("Another user has been created with that Email Adress");
+
   try {
     await user.save();
     res.status(201).json(user);
