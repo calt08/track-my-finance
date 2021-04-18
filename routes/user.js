@@ -8,9 +8,9 @@ const {
   login,
 } = require("../controllers/user");
 
-router.post("/users", createUser);
-router.get("/users/:id", fetchUserByID);
-router.delete("/users/:id", deleteUser);
-router.post("/users/login", login);
+router.post("", createUser);
+router.get("/:id", fetchUserByID);
+router.delete("/:id", deleteUser);
+router.post("/login", login);
 
 module.exports = router;

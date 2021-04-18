@@ -4,7 +4,6 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 // Import Middlewares
-const userRouter = require("./routes/user");
 const generalRouter = require("./routes/router");
 const logger = require("./middlewares/logger");
 
@@ -16,7 +15,6 @@ app.use(express.json());
 app.use(logger);
 
 // Routes
-app.use(userRouter);
 app.use(generalRouter);
 
 app.listen(PORT, () => {

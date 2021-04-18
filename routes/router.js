@@ -7,7 +7,7 @@ userRoute = require("./user");
 accountRoute = require("./account");
 
 // Routes moddlewares
-router.use("/user", userRoute);
-router.use("/account", accountRoute);
+router.use("/users", userRoute);
+router.use("/accounts", accountRoute);
 
 module.exports = router;
