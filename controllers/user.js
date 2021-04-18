@@ -6,7 +6,7 @@ const createUser = async (req, res) => {
   const user = new User(req.body);
 
   //Checking the DB to see if the email is taken
-  const emailTaken = await UserModel.findOne({ email: req.body.email });
+  const emailTaken = await User.findOne({ email: req.body.email });
   if (emailTaken)
     return res
       .status(400)
@@ -53,13 +53,8 @@ const deleteUser = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  //Checking if email exists
-  const user = await User.findOne({ email: req.body.email });
+  const user = await User.findByCredentials(req.body.email, req.body.password);
   if (!user)
-    return res.status(400).send("Please provide a valid Email and password.");
-  //Checking password
-  const validPass = await compare(req.body.password, user.password);
-  if (!validPass)
     return res.status(400).send("Please provide a valid Email and password.");
 
   //Assign Token

@@ -6,7 +6,7 @@ const router = express.Router();
 userRoute = require("./user");
 accountRoute = require("./account");
 
-// Routes moddlewares
+// Routes middlewares
 router.use("/users", userRoute);
 router.use("/accounts", accountRoute);
 
