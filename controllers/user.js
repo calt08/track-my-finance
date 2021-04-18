@@ -11,11 +11,27 @@ const createUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
-  const _id = req.params.id;
+const fetchUserByID = async (req, res) => {
+  const id = req.params.id;
 
   try {
-    const user = await User.findByIdAndDelete(_id);
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(400).send({ status: 400, message: "user not found" });
+    }
+
+    res.status(200).send(user);
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const user = await User.findByIdAndDelete(id);
 
     if (!user) {
       return res.status(400).send({ status: 400, message: "user not found" });
@@ -30,4 +46,5 @@ const deleteUser = async (req, res) => {
 module.exports = {
   createUser,
   deleteUser,
+  fetchUserByID,
 };
