@@ -20,8 +20,8 @@ const createUser = async (req, res) => {
   }
 };
 
-const fetchUserByID = async (req, res) => {
-  const id = req.params.id;
+const fetchUser = async (req, res) => {
+  const id = res.locals.user;
 
   try {
     const user = await User.findById(id);
@@ -37,7 +37,7 @@ const fetchUserByID = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const id = req.params.id;
+  const id = res.locals.user;
 
   try {
     const user = await User.findByIdAndDelete(id);
@@ -52,8 +52,8 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const updateUserByID = async (req, res) => {
-  const id = req.params.id;
+const updateUser = async (req, res) => {
+  const id = res.locals.user;
 
   if (!validations.areUpdatesAllowed(req.body)) {
     return res.status(400).send({ status: 400, message: "invalid updates" });
@@ -87,13 +87,13 @@ const login = async (req, res) => {
 
   //Assign Token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-  res.status(200).header("Authorization", token).send(token);
+  res.status(200).header("Authorization", token).send({ token });
 };
 
 module.exports = {
   createUser,
   deleteUser,
-  fetchUserByID,
-  updateUserByID,
+  fetchUser,
+  updateUser,
   login,
 };
