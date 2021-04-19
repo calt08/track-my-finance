@@ -4,8 +4,10 @@ const router = express.Router();
 
 // Import Routes
 userRoute = require("./user");
+accountRoute = require("./account");
 
-// Routes moddlewares
-router.use("/user", userRoute);
+// Routes middlewares
+router.use("/users", userRoute);
+router.use("/accounts", accountRoute);
 
 module.exports = router;
