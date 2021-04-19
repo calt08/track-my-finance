@@ -1,7 +1,6 @@
 const Account = require("../models/account");
 
 const createAccount = async (req, res) => {
-  res.send(res.locals.user);
   const account = new Account({ ...req.body, userID: res.locals.user });
   try {
     await account.save();
