@@ -1,6 +1,5 @@
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
-const { genSalt, hash, compare } = require("bcryptjs");
 
 const createUser = async (req, res) => {
   const user = new User(req.body);
