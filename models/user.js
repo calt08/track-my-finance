@@ -59,7 +59,7 @@ userSchema.pre("findOneAndDelete", async function (next) {
     await accountSchema.deleteMany({ userID: id });
     await transactionSchema.deleteMany({ userID: id });
   } catch (err) {
-    throw new Error("failed deleting user");
+    throw new Error("Failed deleting user dependencies.");
   }
 
   next();
