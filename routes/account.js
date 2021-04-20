@@ -8,10 +8,16 @@ const verifyToken = require("../middlewares/verify-token");
 router.use(verifyToken);
 
 // Routes
-const { createAccount, fetchAccountByID, fetchAccounts } = require("../controllers/account");
+const {
+  createAccount,
+  fetchAccountByID,
+  fetchAccounts,
+  deleteAccount,
+} = require("../controllers/account");
 
-router.post("",createAccount);
+router.post("", createAccount);
 router.get("/:id", fetchAccountByID);
-router.get("",fetchAccounts);
+router.get("", fetchAccounts);
+router.delete("/:id", deleteAccount);
 
 module.exports = router;
