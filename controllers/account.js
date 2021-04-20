@@ -10,6 +10,26 @@ const createAccount = async (req, res) => {
   }
 };
 
+const deleteAccount = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const deletedAccount = await User.findOneAndDelete({ _id: id });
+
+    if (!deletedAccount) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "Account not found." });
+    }
+    return res
+      .status(200)
+      .send({ message: "Account was deleted", deletedAccount });
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
 module.exports = {
   createAccount,
+  deleteAccount,
 };
