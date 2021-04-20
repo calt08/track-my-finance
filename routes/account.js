@@ -8,8 +8,9 @@ const verifyToken = require("../middlewares/verify-token");
 router.use(verifyToken);
 
 // Routes
-const { createAccount } = require("../controllers/account");
+const { createAccount, deleteAccount } = require("../controllers/account");
 
 router.post("/", createAccount);
+router.delete("/", deleteAccount);
 
 module.exports = router;
