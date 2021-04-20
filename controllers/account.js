@@ -66,9 +66,40 @@ const deleteAccount = async (req, res) => {
   }
 };
 
+const updateAccount = async (req, res) => {
+  const id = req.params.id;
+
+  if (!validations.areUpdatesAllowed(req.body)) {
+    return res.status(400).send({ status: 400, message: "invalid updates" });
+  }
+
+  const updates = Object.keys(req.body);
+
+  try {
+    const account = await User.findById(id);
+
+    if (!account) {
+      return res
+        .status(404)
+        .send({ status: 400, message: "account not found" });
+    }
+
+    updates.forEach((update) => {
+      user[update] = req.body[update];
+    });
+
+    await account.save();
+
+    res.status(200).send(account);
+  } catch (err) {
+    res.status(400).send({ status: 400, message: err });
+  }
+};
+
 module.exports = {
   createAccount,
   fetchAccounts,
   fetchAccountByID,
   deleteAccount,
+  updateAccount,
 };
