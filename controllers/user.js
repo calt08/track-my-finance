@@ -8,9 +8,7 @@ const createUser = async (req, res) => {
   //Checking the DB to see if the email is taken
   const emailTaken = await User.findOne({ email: req.body.email });
   if (emailTaken)
-    return res
-      .status(400)
-      .send("Another user has been created with that Email Adress");
+    return res.status(400).send({status: 400, message: "Another user has been created with that Email Adress"});
 
   try {
     await user.save();
