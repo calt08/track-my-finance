@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const accountTypes = ["General", "Cash", "Credit card", "Savings"];
+const accountTypes = ["general", "cash", "credit card", "savings"];
 
 const accountSchema = new mongoose.Schema({
   name: {
@@ -9,6 +9,7 @@ const accountSchema = new mongoose.Schema({
   },
   type: {
     type: String,
+    lowercase: true,
     enum: accountTypes,
 		default: accountTypes[0],
   },
