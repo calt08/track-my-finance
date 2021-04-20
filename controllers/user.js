@@ -38,7 +38,7 @@ const deleteUser = async (req, res) => {
   const id = res.locals.user;
 
   try {
-    const user = await User.findByIdAndDelete(id);
+    const user = await User.findOneAndDelete({ _id: id });
 
     if (!user) {
       return res.status(400).send({ status: 400, message: "user not found" });

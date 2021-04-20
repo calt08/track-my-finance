@@ -51,13 +51,13 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre("findByIdAndDelete", async function (next) {
+userSchema.pre("findOneAndDelete", async function (next) {
   const query = this;
   const id = query._conditions._id;
 
   try {
-    await transactionSchema.findByIdAndDelete(id);
-    await accountSchema.findByIdAndDelete(id);
+    await accountSchema.deleteMany({ userID: id });
+    await transactionSchema.deleteMany({ userID: id });
   } catch (err) {
     throw new Error("failed deleting user");
   }
