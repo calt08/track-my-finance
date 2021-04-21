@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Accounts = require("./account");
 
 const transactionTypes = ["income", "expense"];
 const transactionCategories = [
@@ -40,6 +41,14 @@ const transactionSchema = new mongoose.Schema({
   note: {
     type: String,
   },
+});
+
+transactionSchema.post("save", async function () {
+  const transaction = this;
+  const account = await Accounts.findById(transaction.accountID);
+  account.amount = account.amount + transaction.amount;
+  account.save();
+  console.log(account);
 });
 
 const Transaction = mongoose.model("transaction", transactionSchema);
