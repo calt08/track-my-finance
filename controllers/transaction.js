@@ -1,7 +1,6 @@
 const Transaction = require("../models/transaction");
 
 const createTransaction = async (req, res) => {
-  //destructuring node express or another fricking name, bobo
   const transaction = new Transaction({
     ...req.body,
     accountID: req.params.account_id,

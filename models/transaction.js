@@ -29,10 +29,6 @@ const transactionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Decimal128,
     required: true,
   },
-  currency: {
-    type: String,
-    required: true,
-  },
   accountID: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
