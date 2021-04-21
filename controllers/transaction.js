@@ -1,7 +1,9 @@
 const Transaction = require("../models/transaction");
 
 const createTransaction = async (req, res) => {
-    const transaction = new Transaction(req.body);
+
+    //destructuring node express or another fricking name, bobo
+    const transaction = new Transaction({...req.body, accountID: req.params.account_id, userID: res.locals.user});
 
     try{
         await transaction.save();

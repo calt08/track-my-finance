@@ -7,6 +7,6 @@ const {
 
 
 
-router.post("/accounts/:account_id/transactions");
+router.post("", createTransaction);
 
 module.exports = router;

@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 
 // Import Routes
-userRoute = require("./user");
-accountRoute = require("./account");
+const userRoute = require("./user");
+const accountRoute = require("./account");
 
 // Routes middlewares
 router.use("/users", userRoute);
