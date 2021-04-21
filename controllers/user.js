@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Account = require("../models/account");
 const validations = require("../validations/user");
 const jwt = require("jsonwebtoken");
 
@@ -8,12 +9,10 @@ const createUser = async (req, res) => {
   //Checking the DB to see if the email is taken
   const emailTaken = await User.findOne({ email: req.body.email });
   if (emailTaken)
-    return res
-      .status(400)
-      .send({
-        status: 400,
-        message: "Another user has been created with that Email Adress",
-      });
+    return res.status(400).send({
+      status: 400,
+      message: "Another user has been created with that Email Adress",
+    });
 
   try {
     await user.save();
@@ -93,10 +92,27 @@ const login = async (req, res) => {
   res.status(200).header("Authorization", token).send({ token });
 };
 
+const getUserNetAssets = async (req, res) => {
+  const value = await Account.aggregate([
+    {
+      $group: {
+        _id: "$userID",
+        total: { $sum: 1 },
+      },
+    },
+    // { $match: { _id: res.locals.user } },
+  ]);
+
+  console.log(value);
+
+  res.send(value);
+};
+
 module.exports = {
   createUser,
   deleteUser,
   fetchUser,
   updateUser,
   login,
+  getUserNetAssets,
 };
