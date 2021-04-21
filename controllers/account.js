@@ -1,5 +1,5 @@
 const Account = require("../models/account");
-const User = require("../models/user");
+const validations = require("../validations/account");
 
 const createAccount = async (req, res) => {
   const account = new Account({ ...req.body, userID: res.locals.user });
@@ -51,18 +51,12 @@ const deleteAccount = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const deletedAccount = await User.findOneAndDelete({ _id: id });
-
-    if (!deletedAccount) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "Account not found." });
-    }
+    const deletedAccount = await Account.findOneAndDelete({ _id: id });
     return res
       .status(200)
       .send({ message: "Account was deleted", deletedAccount });
   } catch (err) {
-    res.status(500).send();
+    res.status(400).send({ status: 400, message: "Account not found." });
   }
 };
 
@@ -76,7 +70,7 @@ const updateAccount = async (req, res) => {
   const updates = Object.keys(req.body);
 
   try {
-    const account = await User.findById(id);
+    const account = await Account.findById(id);
 
     if (!account) {
       return res
@@ -85,7 +79,7 @@ const updateAccount = async (req, res) => {
     }
 
     updates.forEach((update) => {
-      user[update] = req.body[update];
+      account[update] = req.body[update];
     });
 
     await account.save();
