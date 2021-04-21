@@ -9,7 +9,7 @@ const createTransaction = async (req, res) => {
         await transaction.save();
         res.status(201).json(transaction);
     }catch(err){
-        res.status(400).send({ status: 400, message: err.message});
+        res.status(400).send({ status: 400, message: err.message})
     }
 };
 
