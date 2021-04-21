@@ -3,10 +3,12 @@ const router = express.Router();
 
 const { 
     createTransaction,
-    fetchTransactions
+    fetchTransactions,
+    fetchLastTenTransactions
  } = require("../controllers/transaction");
 
 router.post("/accounts/:account_id/transactions", createTransaction);
 router.get("/accounts/:account_id/transactions", fetchTransactions);
+router.get("/accounts/:account_id/lastTenTransactions", fetchLastTenTransactions);
 
 module.exports = router;
