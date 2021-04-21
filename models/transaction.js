@@ -48,7 +48,6 @@ transactionSchema.post("save", async function () {
   const account = await Accounts.findById(transaction.accountID);
   account.amount = account.amount + transaction.amount;
   account.save();
-  console.log(account);
 });
 
 const Transaction = mongoose.model("transaction", transactionSchema);
