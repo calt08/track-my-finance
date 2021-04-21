@@ -46,9 +46,16 @@ const transactionSchema = new mongoose.Schema({
 transactionSchema.post("save", async function () {
   const transaction = this;
   const account = await Accounts.findById(transaction.accountID);
-  account.amount = account.amount + transaction.amount;
+  account.amount = parseFloat(account.amount) + parseFloat(transaction.amount);
   account.save();
 });
+
+transactionSchema.post("findOneAndDelete", async function () {
+  const transaction = this;
+  const account = await Accounts.findById(transaction.accountID);
+  account.amount = parseFloat(account.amount) - parseFloat(transaction.amount);
+  account.save();
+})
 
 const Transaction = mongoose.model("transaction", transactionSchema);
 
