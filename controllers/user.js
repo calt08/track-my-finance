@@ -95,15 +95,6 @@ const login = async (req, res) => {
   res.status(200).header("Authorization", token).send({ token });
 };
 
-const getUserNetAssets = async (req, res) => {
-  const userID = res.locals.user._id;
-  // const total = await User.getNetAssets(userID);
-
-  console.log(total);
-
-  res.send(total);
-};
-
 module.exports = {
   createUser,
   deleteUser,
