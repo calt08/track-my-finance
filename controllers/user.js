@@ -10,7 +10,10 @@ const createUser = async (req, res) => {
   if (emailTaken)
     return res
       .status(400)
-      .send("Another user has been created with that Email Adress");
+      .send({
+        status: 400,
+        message: "Another user has been created with that Email Adress",
+      });
 
   try {
     await user.save();
@@ -40,7 +43,7 @@ const deleteUser = async (req, res) => {
   const id = res.locals.user;
 
   try {
-    const user = await User.findByIdAndDelete(id);
+    const user = await User.findOneAndDelete({ _id: id });
 
     if (!user) {
       return res.status(400).send({ status: 400, message: "user not found" });
