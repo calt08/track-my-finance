@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/calt08/track-my-finance-api.git"
+    "url": "git+https://github.com/track-my-finance/track-my-finance-api.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/calt08/track-my-finance-api/issues"
+    "url": "https://github.com/track-my-finance/track-my-finance-api/issues"
   },
-  "homepage": "https://github.com/calt08/track-my-finance-api#readme",
+  "homepage": "https://github.com/track-my-finance/track-my-finance-api#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
