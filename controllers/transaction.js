@@ -36,9 +36,11 @@ const fetchTransactions = async (req, res) => {
 
 const fetchLastTenTransactions = async (req, res) => {
   const userID = res.locals.user;
+  console.log(req.query.filter);
 
   try {
-    const transactions = await Transaction.find({userID}).sort('-date').limit(10);
+    const transactions = await Transaction.find({userID}).sort('-date').limit(parseInt(req.query.filter));
+    //const transactions = await Transaction.find({userID}).sort('-date').limit(10);
 
     if(!transactions){
       return res

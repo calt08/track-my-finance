@@ -4,11 +4,14 @@ const router = express.Router();
 const { 
     createTransaction,
     fetchTransactions,
-    fetchLastTenTransactions
+//    fetchLastTenTransactions
  } = require("../controllers/transaction");
 
-router.post("/accounts/:account_id/transactions", createTransaction);
 router.get("/accounts/:account_id/transactions", fetchTransactions);
-router.get("/accounts/whatever/lastTenTransactions", fetchLastTenTransactions);
+router.post("/accounts/:account_id/transactions", createTransaction);
+
+//La ruta que sirve
+//router.get("/accounts/whatever/transactions", fetchLastTenTransactions);
+
 
 module.exports = router;
