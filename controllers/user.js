@@ -2,6 +2,9 @@ const User = require("../models/user");
 const Account = require("../models/account");
 const validations = require("../validations/user");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
+
+const ObjectId = mongoose.Types.ObjectId;
 
 const createUser = async (req, res) => {
   const user = new User(req.body);
@@ -93,17 +96,20 @@ const login = async (req, res) => {
 };
 
 const getUserNetAssets = async (req, res) => {
+  const userID = res.locals.user._id;
+  console.log(userID);
   const value = await Account.aggregate([
+    { $match: { userID: ObjectId(userID) } },
     {
       $group: {
         _id: "$userID",
-        total: { $sum: 1 },
+        countAccounts: { $sum: 1 },
+        total: { $sum: "$amount" },
       },
     },
-    // { $match: { _id: res.locals.user } },
   ]);
 
-  console.log(value);
+  // console.log(value);
 
   res.send(value);
 };
