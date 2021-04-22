@@ -9,6 +9,6 @@ const {
 
 router.post("/accounts/:account_id/transactions", createTransaction);
 router.get("/accounts/:account_id/transactions", fetchTransactions);
-router.get("/accounts/:account_id/lastTenTransactions", fetchLastTenTransactions);
+router.get("/accounts/whatever/lastTenTransactions", fetchLastTenTransactions);
 
 module.exports = router;
