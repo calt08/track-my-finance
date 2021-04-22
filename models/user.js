@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const validator = require("validator").default;
 const bcrypt = require("bcryptjs");
-const transactionSchema = require("./transaction");
-const accountSchema = require("./account");
+const Transaction = require("./transaction");
+const Account = require("./account");
+
+const ObjectId = mongoose.Types.ObjectId;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -41,6 +43,21 @@ userSchema.statics.findByCredentials = async (email, password) => {
   return user;
 };
 
+userSchema.statics.getNetAssets = async (userID) => {
+  const value = await Account.aggregate([
+    { $match: { userID: ObjectId(userID) } },
+    {
+      $group: {
+        _id: "$userID",
+        countAccounts: { $sum: 1 },
+        total: { $sum: "$amount" },
+      },
+    },
+  ]);
+
+  return value[0].total;
+};
+
 userSchema.pre("save", async function (next) {
   const user = this;
 
@@ -56,8 +73,8 @@ userSchema.pre("findOneAndDelete", async function (next) {
   const id = query._conditions._id;
 
   try {
-    await accountSchema.deleteMany({ userID: id });
-    await transactionSchema.deleteMany({ userID: id });
+    await Account.deleteMany({ userID: id });
+    await Transaction.deleteMany({ userID: id });
   } catch (err) {
     throw new Error("Failed deleting user dependencies.");
   }
