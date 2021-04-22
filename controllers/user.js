@@ -37,7 +37,7 @@ const fetchUser = async (req, res) => {
     userWithNetAssets = { ...userObject, netAssets };
     res.status(200).json(userWithNetAssets);
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).send({ status: 400, message: err.message });
   }
 };
 
@@ -53,7 +53,7 @@ const deleteUser = async (req, res) => {
 
     return res.status(200).send(user);
   } catch (err) {
-    res.status(500).send();
+    res.status(400).send({ status: 400, message: err.message });
   }
 };
 
@@ -101,5 +101,4 @@ module.exports = {
   fetchUser,
   updateUser,
   login,
-  getUserNetAssets,
 };
