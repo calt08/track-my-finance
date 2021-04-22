@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-const { 
-    createTransaction,
-    fetchTransactions,
-    fetchLastTenTransactions,
-    deleteTransaction
- } = require("../controllers/transaction");
+// Import Middlewares
+const verifyToken = require("../middlewares/verify-token");
 
-router.post("/accounts/:account_id/transactions", createTransaction);
-router.get("/accounts/:account_id/transactions", fetchTransactions);
-router.get("/accounts/:account_id/lastTenTransactions", fetchLastTenTransactions);
-router.delete("/transactions/:id", deleteTransaction);
+// Global Middlewares
+router.use(verifyToken);
+
+const { fetchTransactions, deleteTransaction } = require("../controllers/transaction");
+
+router.get("", fetchTransactions);
+router.delete("/:id", deleteTransaction);
 
 module.exports = router;
