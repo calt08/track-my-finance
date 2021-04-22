@@ -15,45 +15,47 @@ const createTransaction = async (req, res) => {
   }
 };
 
-const fetchTransactions = async (req, res) => {
+const fetchTransactionsByAccountID = async (req, res) => {
   const accountID = req.params.account_id;
   const userID = res.locals.user;
 
   try {
-    const transactions = await Transaction.find({accountID, userID});
+    const transactions = await Transaction.find({ accountID, userID });
 
-    if(!transactions){
+    if (!transactions) {
       return res
-        .status (400)
-        .send({status: 400, message: "transactions not found"});
+        .status(400)
+        .send({ status: 400, message: "transactions not found" });
     }
 
     res.status(200).send(transactions);
-  } catch(err) {
+  } catch (err) {
     res.status(500).send();
   }
 };
 
-const fetchLastTenTransactions = async (req, res) => {
+const fetchTransactions = async (req, res) => {
   const userID = res.locals.user;
 
   try {
-    const transactions = await Transaction.find({userID}).sort('-date').limit(10);
+    const transactions = await Transaction.find({ userID })
+      .sort("-date")
+      .limit(10);
 
-    if(!transactions){
+    if (!transactions) {
       return res
-        .status (400)
-        .send({status: 400, message: "transactions not found"});
+        .status(400)
+        .send({ status: 400, message: "transactions not found" });
     }
 
     res.status(200).send(transactions);
-  } catch(err) {
+  } catch (err) {
     res.status(500).send();
   }
 };
 
 module.exports = {
   createTransaction,
+  fetchTransactionsByAccountID,
   fetchTransactions,
-  fetchLastTenTransactions
 };
