@@ -54,6 +54,9 @@ userSchema.statics.getNetAssets = async (userID) => {
       },
     },
   ]);
+  if (value.length === 0) {
+    return 0;
+  }
 
   return value[0].total;
 };
