@@ -28,6 +28,6 @@ router.put("/:id", updateAccount);
 router.delete("/:id", deleteAccount);
 
 router.post("/:account_id/transactions", createTransaction);
-route.get("/:account_id/transactions", fetchTransactionsByAccountID);
+router.get("/:account_id/transactions", fetchTransactionsByAccountID);
 
 module.exports = router;
