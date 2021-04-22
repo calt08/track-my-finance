@@ -1,17 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { 
-    createTransaction,
-    fetchTransactions,
-//    fetchLastTenTransactions
- } = require("../controllers/transaction");
+// Import Middlewares
+const verifyToken = require("../middlewares/verify-token");
 
-router.get("/accounts/:account_id/transactions", fetchTransactions);
-router.post("/accounts/:account_id/transactions", createTransaction);
+// Global Middlewares
+router.use(verifyToken);
 
-//La ruta que sirve
-//router.get("/accounts/whatever/transactions", fetchLastTenTransactions);
+const { fetchTransactions } = require("../controllers/transaction");
 
+router.get("", fetchTransactions);
 
 module.exports = router;
