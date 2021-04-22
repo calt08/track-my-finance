@@ -90,7 +90,7 @@ const login = async (req, res) => {
 
   //Assign Token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-  res.status(200).header("Authorization", token).send({ token });
+  res.status(200).header("Authorization", token).send({ token, user });
 };
 
 module.exports = {
