@@ -50,7 +50,7 @@ transactionSchema.post("save", async function () {
   account.save();
 });
 
-transactionSchema.post("findOneAndDelete", async function () {
+transactionSchema.pre("remove", async function () {
   const transaction = this;
   const account = await Accounts.findById(transaction.accountID);
   account.amount = parseFloat(account.amount) - parseFloat(transaction.amount);

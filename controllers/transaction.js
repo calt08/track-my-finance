@@ -57,7 +57,8 @@ const deleteTransaction = async (req, res) => {
   const {id} = req.params;
 
   try {
-    const transaction = await Transaction.findOneAndDelete({_id: id});
+    const transaction = await Transaction.findById(id);
+    transaction.remove();
     res.status(200).send({message: "Transaction deleted successfully.", transaction});
   } catch(e) {
     res.status(500).send({error: e, message: "There has been an error deleting this transaction."});
