@@ -2,9 +2,6 @@ const User = require("../models/user");
 const Account = require("../models/account");
 const validations = require("../validations/user");
 const jwt = require("jsonwebtoken");
-const mongoose = require("mongoose");
-
-const ObjectId = mongoose.Types.ObjectId;
 
 const createUser = async (req, res) => {
   const user = new User(req.body);
@@ -26,21 +23,22 @@ const createUser = async (req, res) => {
 };
 
 const fetchUser = async (req, res) => {
-  const id = res.locals.user;
+  const userID = res.locals.user;
 
-  // try {
-  let user = await User.findById(id);
-  const total = await User.getNetAssets(id._id);
-  user = { ...user, total };
+  try {
+    const user = await User.findById(userID);
 
-  if (!user) {
-    return res.status(400).send({ status: 400, message: "user not found" });
+    if (!user) {
+      return res.status(400).send({ status: 400, message: "user not found" });
+    }
+
+    const userObject = user.toObject();
+    const netAssets = await User.getNetAssets(userID._id);
+    userWithNetAssets = { ...userObject, netAssets };
+    res.status(200).json(userWithNetAssets);
+  } catch (err) {
+    res.status(400).send(err);
   }
-
-  res.status(200).json(user);
-  // } catch (err) {
-  //   res.status(500).send();
-  // }
 };
 
 const deleteUser = async (req, res) => {
@@ -99,22 +97,7 @@ const login = async (req, res) => {
 
 const getUserNetAssets = async (req, res) => {
   const userID = res.locals.user._id;
-  const total = await User.getNetAssets(userID);
-  // const value = await Account.aggregate([
-  //   { $match: { userID: ObjectId(userID) } },
-  //   {
-  //     $group: {
-  //       _id: "$userID",
-  //       countAccounts: { $sum: 1 },
-  //       total: { $sum: "$amount" },
-  //     },
-  //   },
-  //   {
-  //     $addFields: {
-  //       total: { $toString: "$total" },
-  //     },
-  //   },
-  // ]);
+  // const total = await User.getNetAssets(userID);
 
   console.log(total);
 
