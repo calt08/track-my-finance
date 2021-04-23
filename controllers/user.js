@@ -9,8 +9,8 @@ const createUser = async (req, res) => {
   //Checking the DB to see if the email is taken
   const emailTaken = await User.findOne({ email: req.body.email });
   if (emailTaken)
-    return res.status(400).send({
-      status: 400,
+    return res.status(409).send({
+      status: 409,
       message: "Another user has been created with that Email Adress",
     });
 
@@ -28,14 +28,10 @@ const fetchUser = async (req, res) => {
   try {
     const user = await User.findById(userID);
 
-    if (!user) {
+    if (!user)
       return res.status(400).send({ status: 400, message: "user not found" });
-    }
 
-    const userObject = user.toObject();
-    const netAssets = await User.getNetAssets(userID._id);
-    userWithNetAssets = { ...userObject, netAssets };
-    res.status(200).json(userWithNetAssets);
+    res.status(200).json(user);
   } catch (err) {
     res.status(400).send({ status: 400, message: err.message });
   }
