@@ -54,8 +54,33 @@ const fetchTransactions = async (req, res) => {
   }
 };
 
+const deleteTransaction = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const transaction = await Transaction.findById(id);
+
+    if (!transaction) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "transaction not found" });
+    }
+
+    await transaction.remove();
+    res
+      .status(200)
+      .send({ message: "Transaction deleted successfully.", transaction });
+  } catch (e) {
+    res.status(500).send({
+      error: e,
+      message: "There has been an error deleting this transaction.",
+    });
+  }
+};
+
 module.exports = {
   createTransaction,
   fetchTransactionsByAccountID,
   fetchTransactions,
+  deleteTransaction,
 };
