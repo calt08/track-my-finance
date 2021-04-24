@@ -46,7 +46,20 @@ const transactionSchema = new mongoose.Schema({
 transactionSchema.post("save", async function () {
   const transaction = this;
   const account = await Accounts.findById(transaction.accountID);
-  account.amount = account.amount + transaction.amount;
+
+  const amount = transaction.amount;
+
+  switch (transaction.type) {
+    case "income":
+      account.amount = account.amount + amount;
+      break;
+    case "expense":
+      account.amount = account.amount - amount;
+      break;
+    default:
+      throw new Error("undefined transaction type");
+  }
+
   account.save();
 });
 
