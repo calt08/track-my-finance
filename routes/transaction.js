@@ -7,8 +7,12 @@ const verifyToken = require("../middlewares/verify-token");
 // Global Middlewares
 router.use(verifyToken);
 
-const { fetchTransactions } = require("../controllers/transaction");
+const {
+  fetchTransactions,
+  fetchTransactionByID,
+} = require("../controllers/transaction");
 
 router.get("", fetchTransactions);
+router.get("/:id", fetchTransactionByID);
 
 module.exports = router;

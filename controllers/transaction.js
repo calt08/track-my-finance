@@ -54,6 +54,24 @@ const fetchTransactions = async (req, res) => {
   }
 };
 
+const fetchTransactionByID = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const transaction = await Transaction.findById(id);
+
+    if (!transaction) {
+      return res
+        .status(400)
+        .send({ status: 400, message: "transaction not found" });
+    }
+
+    res.status(200).send(transaction);
+  } catch (err) {
+    res.status(500).send();
+  }
+};
+
 const deleteTransaction = async (req, res) => {
   const { id } = req.params;
 
@@ -82,5 +100,6 @@ module.exports = {
   createTransaction,
   fetchTransactionsByAccountID,
   fetchTransactions,
+  fetchTransactionByID,
   deleteTransaction,
 };
