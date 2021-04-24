@@ -46,8 +46,41 @@ const transactionSchema = new mongoose.Schema({
 transactionSchema.post("save", async function () {
   const transaction = this;
   const account = await Accounts.findById(transaction.accountID);
-  account.amount = account.amount + transaction.amount;
-  account.save();
+
+  const amount = transaction.amount;
+
+  switch (transaction.type) {
+    case "income":
+      account.amount = parseFloat(account.amount) + parseFloat(amount);
+      break;
+    case "expense":
+      account.amount = parseFloat(account.amount) - parseFloat(amount);
+      break;
+    default:
+      throw new Error("undefined transaction type");
+  }
+
+  await account.save();
+});
+
+transactionSchema.pre("remove", async function () {
+  const transaction = this;
+  const account = await Accounts.findById(transaction.accountID);
+
+  const amount = transaction.amount;
+
+  switch (transaction.type) {
+    case "income":
+      account.amount = parseFloat(account.amount) - parseFloat(amount);
+      break;
+    case "expense":
+      account.amount = parseFloat(account.amount) + parseFloat(amount);
+      break;
+    default:
+      throw new Error("undefined transaction type");
+  }
+
+  await account.save();
 });
 
 const Transaction = mongoose.model("transaction", transactionSchema);
