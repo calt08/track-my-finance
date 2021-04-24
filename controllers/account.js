@@ -1,4 +1,5 @@
 const Account = require("../models/account");
+const User = require("../models/user");
 const validations = require("../validations/account");
 
 const createAccount = async (req, res) => {
@@ -14,19 +15,15 @@ const createAccount = async (req, res) => {
 const fetchAccounts = async (req, res) => {
   const userID = res.locals.user;
 
-  try {
-    const accounts = await Account.find({ userID });
+  const accounts = await Account.find({ userID });
 
-    if (!accounts) {
-      return res
-        .status(400)
-        .send({ status: 400, message: "accounts not found" });
-    }
-
-    res.status(200).send(accounts);
-  } catch (err) {
-    res.status(500).send();
+  if (!accounts) {
+    return res.status(400).send({ status: 400, message: "accounts not found" });
   }
+
+  const netAssets = await User.getNetAssets(userID._id);
+  accountsWithNetAssets = { accounts: accounts, netAssets };
+  res.status(200).send(accountsWithNetAssets);
 };
 
 const fetchAccountByID = async (req, res) => {

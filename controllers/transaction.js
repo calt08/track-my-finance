@@ -37,7 +37,6 @@ const fetchTransactionsByAccountID = async (req, res) => {
 const fetchTransactions = async (req, res) => {
   const userID = res.locals.user;
 
-
   try {
     const transactions = await Transaction.find({ userID })
       .sort("-date")

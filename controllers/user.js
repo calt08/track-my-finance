@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const Account = require("../models/account");
 const validations = require("../validations/user");
 const jwt = require("jsonwebtoken");
 
@@ -8,12 +9,10 @@ const createUser = async (req, res) => {
   //Checking the DB to see if the email is taken
   const emailTaken = await User.findOne({ email: req.body.email });
   if (emailTaken)
-    return res
-      .status(400)
-      .send({
-        status: 400,
-        message: "Another user has been created with that Email Adress",
-      });
+    return res.status(409).send({
+      status: 409,
+      message: "Another user has been created with that Email Adress",
+    });
 
   try {
     await user.save();
@@ -24,18 +23,17 @@ const createUser = async (req, res) => {
 };
 
 const fetchUser = async (req, res) => {
-  const id = res.locals.user;
+  const userID = res.locals.user;
 
   try {
-    const user = await User.findById(id);
+    const user = await User.findById(userID);
 
-    if (!user) {
+    if (!user)
       return res.status(400).send({ status: 400, message: "user not found" });
-    }
 
-    res.status(200).send(user);
+    res.status(200).json(user);
   } catch (err) {
-    res.status(500).send();
+    res.status(400).send({ status: 400, message: err.message });
   }
 };
 
@@ -51,7 +49,7 @@ const deleteUser = async (req, res) => {
 
     return res.status(200).send(user);
   } catch (err) {
-    res.status(500).send();
+    res.status(400).send({ status: 400, message: err.message });
   }
 };
 
@@ -90,7 +88,7 @@ const login = async (req, res) => {
 
   //Assign Token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-  res.status(200).header("Authorization", token).send({ token });
+  res.status(200).header("Authorization", token).send({ token, user });
 };
 
 module.exports = {
