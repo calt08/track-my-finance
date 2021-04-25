@@ -10,6 +10,8 @@ const transactionCategories = [
   "food & drinks",
   "shopping",
   "entertainment",
+  "wage",
+  "bonus",
 ];
 
 const transactionSchema = new mongoose.Schema({
