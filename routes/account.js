@@ -19,7 +19,6 @@ const {
 const {
   createTransaction,
   fetchTransactionsByAccountID,
-  deleteTransaction,
 } = require("../controllers/transaction");
 
 router.post("", createAccount);
@@ -30,6 +29,5 @@ router.delete("/:id", deleteAccount);
 
 router.post("/:account_id/transactions", createTransaction);
 router.get("/:account_id/transactions", fetchTransactionsByAccountID);
-router.delete("/:account_id/transactions/:id", deleteTransaction);
 
 module.exports = router;
