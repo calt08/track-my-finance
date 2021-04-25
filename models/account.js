@@ -33,7 +33,7 @@ accountSchema.pre("findOneAndDelete", async function (next) {
   const id = query._conditions._id;
 
   try {
-    await transactionSchema.deleteMany({ userID: id });
+    await transactionSchema.deleteMany({ accountID: id });
   } catch (err) {
     throw new Error("Failed deleting account dependencies.");
   }
