@@ -1,4 +1,5 @@
 const Account = require("../models/account");
+const Transaction = require("../models/transaction");
 const User = require("../models/user");
 const validations = require("../validations/account");
 
@@ -48,6 +49,7 @@ const deleteAccount = async (req, res) => {
   const id = req.params.id;
 
   try {
+    await Transaction.deleteTransactionsByAccountID(id);
     const deletedAccount = await Account.findOneAndDelete({ _id: id });
     return res
       .status(200)

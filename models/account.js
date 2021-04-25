@@ -28,19 +28,6 @@ const accountSchema = new mongoose.Schema({
   },
 });
 
-accountSchema.pre("findOneAndDelete", async function (next) {
-  const query = this;
-  const id = query._conditions._id;
-
-  try {
-    await transactionSchema.deleteMany({ accountID: id });
-  } catch (err) {
-    throw new Error("Failed deleting account dependencies.");
-  }
-
-  next();
-});
-
 const Account = mongoose.model("account", accountSchema);
 
 module.exports = Account;

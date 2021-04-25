@@ -65,6 +65,16 @@ transactionSchema.post("save", async function () {
   await account.save();
 });
 
+transactionSchema.statics.deleteTransactionsByAccountID = async function (
+  accountID
+) {
+  try {
+    await Transaction.deleteMany({ accountID });
+  } catch (error) {
+    throw new Error("Failed deleting account dependencies.");
+  }
+};
+
 transactionSchema.pre("remove", async function () {
   const transaction = this;
   const account = await Accounts.findById(transaction.accountID);
