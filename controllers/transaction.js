@@ -24,8 +24,8 @@ const fetchTransactionsByAccountID = async (req, res) => {
 
     if (!transactions) {
       return res
-        .status(400)
-        .send({ status: 400, message: "transactions not found" });
+        .status(404)
+        .send({ status: 404, message: "transactions not found" });
     }
 
     res.status(200).send(transactions);
