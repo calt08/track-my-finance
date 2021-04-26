@@ -1,0 +1,668 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Track My Finance API",
+    "description": "API for a webapp that facilitates the management of the financial status of users.",
+    "version": "1.0",
+    "license": {
+      "name": "ISC",
+      "url": "https://opensource.org/licenses/ISC"
+    }
+  },
+  "host": "https://track-my-finance-api.herokuapp.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
+    },
+    {
+      "name": "Accounts",
+      "description": "API for accounts belonging to a specific user in the system"
+    },
+    {
+      "name": "Transactions",
+      "description": "API for transactions related to an account which belongs to a specified user in the system"
+    }
+  ],
+  "schemes": ["http"],
+  "securitySchemes": {
+    "jwt": {
+      "name": "Authorization",
+      "type": "http",
+      "scheme": "bearer",
+      "bearerFormat": "JWT",
+      "in": "header"
+    }
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Fetch information of the specified user",
+        "responses": {
+          "200": {
+            "description": "User found",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "user not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Create a new user in the system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Data of user we want to create",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "User created",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "409": {
+            "description": "User with inputted email already exists",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "Another user has been created with that email address"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Users"],
+        "summary": "Update a user in the system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Data of user to update",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User updated",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid updates to user data",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "invalid updates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "user not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Users"],
+        "summary": "Delete the current user from the system",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "user not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "description": "Error message"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Login user to system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Data to login user into system",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "uniqueItems": true
+                },
+                "password": {
+                  "type": "string",
+                  "minLength": 7
+                }
+              }
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User logged in",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid email or password",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "Please provide a valid email or password"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts": {
+      "post": {
+        "tags": ["Accounts"],
+        "summary": "Create an account for the given user in the system",
+        "parameters": [
+          {
+            "name": "account",
+            "in": "body",
+            "description": "Data of account we want to create",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Account created",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Accounts"],
+        "summary": "Fetch all accounts of the user",
+        "responses": {
+          "200": {
+            "description": "Accounts found",
+            "schema": {
+              "$ref": "#/definitions/Accounts"
+            }
+          },
+          "400": {
+            "description": "Accounts not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "accounts not found"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{id}": {
+      "get": {
+        "tags": ["Accounts"],
+        "summary": "Fetch account by ID",
+        "responses": {
+          "200": {
+            "description": "Account found",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "400": {
+            "description": "Account not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "account not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Accounts"],
+        "summary": "Update an account in the system",
+        "responses": {
+          "200": {
+            "description": "Account updated",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "400": {
+            "description": "Invalid updates to account data",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "invalid updates"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "account not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Accounts"],
+        "summary": "Delete account by ID",
+        "responses": {
+          "200": {
+            "description": "Account deleted",
+            "schema": {
+              "$ref": "#/definitions/Account"
+            }
+          },
+          "404": {
+            "description": "Account not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "account not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      }
+    },
+    "/accounts/{account_id}/transactions": {
+      "post": {
+        "tags": ["Accounts"],
+        "summary": "Create a transaction for the given account",
+        "parameters": [
+          {
+            "name": "transaction",
+            "in": "body",
+            "description": "Data of transaction we want to create for the specified account",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "description": "ID of the specified account",
+            "type": "integer"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "Transaction created for the specified account",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Accounts"],
+        "summary": "Fetch all transactions for the given account",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "description": "ID of the specified account",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transactions found for the given account",
+            "schema": {
+              "$ref": "#/definitions/Transactions"
+            }
+          },
+          "404": {
+            "description": "Transactions not found for the given account",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "transactions not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      }
+    },
+    "/transactions": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Fetch all transactions of the user",
+        "responses": {
+          "200": {
+            "description": "Transactions found",
+            "schema": {
+              "$ref": "#/definitions/Transactions"
+            }
+          },
+          "400": {
+            "description": "Transactions not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "transactions not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      }
+    },
+    "/transactions/{id}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Fetch transaction by ID",
+        "responses": {
+          "200": {
+            "description": "transaction found",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          "400": {
+            "description": "Transaction not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "transaction not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Transactions"],
+        "summary": "Delete transaction by ID",
+        "responses": {
+          "200": {
+            "description": "transaction deleted",
+            "schema": {
+              "$ref": "#/definitions/Transaction"
+            }
+          },
+          "400": {
+            "description": "Transaction not found",
+            "schema": {
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "default": "transaction not found"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "required": ["email", "password"],
+      "properties": {
+        "_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    },
+    "Account": {
+      "required": ["name", "amount", "userID"],
+      "properties": {
+        "_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["general", "cash", "credit card", "savings"],
+          "default": "general"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "float",
+          "default": 0
+        },
+        "userID": {
+          "type": "number",
+          "uniqueItems": true
+        }
+      }
+    },
+    "Accounts": {
+      "type": "array",
+      "$ref": "#/definitions/Account"
+    },
+    "Transaction": {
+      "required": ["date", "category", "amount", "accountID", "userID"],
+      "properties": {
+        "_id": {
+          "type": "integer",
+          "uniqueItems": true
+        },
+        "type": {
+          "type": "string",
+          "enum": ["income", "expense"]
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "income",
+            "transportation",
+            "vehicle",
+            "housing",
+            "food & drinks",
+            "shopping",
+            "entertainment",
+            "wage",
+            "bonus"
+          ]
+        },
+        "amount": {
+          "type": "number",
+          "format": "float"
+        },
+        "accountID": {
+          "type": "number",
+          "uniqueItems": true
+        },
+        "userID": {
+          "type": "number",
+          "uniqueItems": true
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "Transactions": {
+      "type": "array",
+      "$ref": "#/definitions/Transaction"
+    }
+  }
+}
