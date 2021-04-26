@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
     await user.save();
     res.status(201).json(user);
   } catch (err) {
-    res.status(400).send({ status: 400, message: err.message });
+    res.status(500).send({ status: 500, message: err.message });
   }
 };
 
@@ -29,11 +29,11 @@ const fetchUser = async (req, res) => {
     const user = await User.findById(userID);
 
     if (!user)
-      return res.status(400).send({ status: 400, message: "user not found" });
+      return res.status(404).send({ status: 404, message: "user not found" });
 
     res.status(200).json(user);
   } catch (err) {
-    res.status(400).send({ status: 400, message: err.message });
+    res.status(500).send({ status: 500, message: err.message });
   }
 };
 
@@ -44,12 +44,12 @@ const deleteUser = async (req, res) => {
     const user = await User.findOneAndDelete({ _id: id });
 
     if (!user) {
-      return res.status(400).send({ status: 400, message: "user not found" });
+      return res.status(404).send({ status: 404, message: "user not found" });
     }
 
     return res.status(200).send(user);
   } catch (err) {
-    res.status(400).send({ status: 400, message: err.message });
+    res.status(500).send({ status: 500, message: err.message });
   }
 };
 
@@ -66,7 +66,7 @@ const updateUser = async (req, res) => {
     const user = await User.findById(id);
 
     if (!user) {
-      return res.status(404).send({ status: 400, message: "user not found" });
+      return res.status(404).send({ status: 404, message: "user not found" });
     }
 
     updates.forEach((update) => {
@@ -77,14 +77,14 @@ const updateUser = async (req, res) => {
 
     res.status(200).send(user);
   } catch (err) {
-    res.status(400).send({ status: 400, message: err });
+    res.status(500).send({ status: 500, message: err });
   }
 };
 
 const login = async (req, res) => {
   const user = await User.findByCredentials(req.body.email, req.body.password);
   if (!user)
-    return res.status(400).send("Please provide a valid Email and password.");
+    return res.status(400).send("Please provide a valid Email or password.");
 
   //Assign Token
   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);

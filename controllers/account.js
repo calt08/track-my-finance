@@ -51,11 +51,18 @@ const deleteAccount = async (req, res) => {
   try {
     await Transaction.deleteTransactionsByAccountID(id);
     const deletedAccount = await Account.findOneAndDelete({ _id: id });
+
+    if (!deleteAccount) {
+      return res
+        .status(404)
+        .send({ status: 404, message: "account not found" });
+    }
+
     return res
       .status(200)
       .send({ message: "Account was deleted", deletedAccount });
   } catch (err) {
-    res.status(400).send({ status: 400, message: "Account not found." });
+    res.status(500).send();
   }
 };
 
@@ -74,7 +81,7 @@ const updateAccount = async (req, res) => {
     if (!account) {
       return res
         .status(404)
-        .send({ status: 400, message: "account not found" });
+        .send({ status: 404, message: "account not found" });
     }
 
     updates.forEach((update) => {
@@ -85,7 +92,7 @@ const updateAccount = async (req, res) => {
 
     res.status(200).send(account);
   } catch (err) {
-    res.status(400).send({ status: 400, message: err });
+    res.status(500).send({ status: 500, message: err });
   }
 };
 
